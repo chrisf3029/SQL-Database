@@ -24,7 +24,7 @@ foreign key(courseCode) references Courses(courseCode)
 
 insert into Students(studentID, firstName, lastName, gender, dateofbirth)
 values
-	('861103-2438', 'Adam', 'Johnson', 'M', '1990-10-01'),
+    ('861103-2438', 'Adam', 'Johnson', 'M', '1990-10-01'),
     ('911212-1746', 'Eva', 'Smith', 'F', '1991-08-20'),
     ('950829-1848', 'Anna', 'Washington', 'F', '1993-09-26'),
     ('123456-0980', 'Eric', 'Alonzo', 'M', '1990-05-26'),
@@ -39,7 +39,7 @@ values
     
 insert into Courses(courseCode, courseName, level, credits)
 values
-	('CS056', 'Database Systems', 'G1', 5),
+    ('CS056', 'Database Systems', 'G1', 5),
     ('CS010', 'C++', 'U1', 5),
     ('ENG111', 'English', 'U1', 3),
     ('FIN052', 'Finance', 'G1', 5),
@@ -50,91 +50,76 @@ values
 
 insert into Registration(studentID, courseCode, grade)
 values
-	((select studentID from Students where studentID='861103-2438'), (select courseCode from Courses where courseCode='CS056'), 4),
-    ((select studentID from Students where studentID='861103-2438'), (select courseCode from Courses where courseCode='CS010'), 4),
-    ((select studentID from Students where studentID='861103-2438'), (select courseCode from Courses where courseCode='PHY210'), 3.5),
-    ((select studentID from Students where studentID='911212-1746'), (select courseCode from Courses where courseCode='ENG111'), 2),
-    ((select studentID from Students where studentID='950829-1848'), (select courseCode from Courses where courseCode='CHE350'), 3),
-    ((select studentID from Students where studentID='950829-1848'), (select courseCode from Courses where courseCode='BIO001'), 2.5),
-    ((select studentID from Students where studentID='123456-0980'), (select courseCode from Courses where courseCode='CS052'), 3.5),
-    ((select studentID from Students where studentID='123456-0980'), (select courseCode from Courses where courseCode='CS056'), 4),
-	((select studentID from Students where studentID='908023-2456'), (select courseCode from Courses where courseCode='PHY210'), 3.0),
-	((select studentID from Students where studentID='908023-2456'), (select courseCode from Courses where courseCode='CS056'), 1.0),
-	((select studentID from Students where studentID='908023-2456'), (select courseCode from Courses where courseCode='CS010'), 2.0),
-    ((select studentID from Students where studentID='124345-3430'), (select courseCode from Courses where courseCode='FIN052'), 2.5),
-    ((select studentID from Students where studentID='124345-3430'), (select courseCode from Courses where courseCode='CHE350'), 4),
-    ((select studentID from Students where studentID='908409-0010'), (select courseCode from Courses where courseCode='CS052'), 2),
-    ((select studentID from Students where studentID='124587-9088'), (select courseCode from Courses where courseCode='BIO001'), 4),
-	((select studentID from Students where studentID='124587-9088'), (select courseCode from Courses where courseCode='CS052'), 3.5);
+    ('861103-2438','CS056', 4),
+    ('861103-2438', 'CS010', 4),
+    ('861103-2438', 'PHY210', 3.5),
+    ('911212-1746', 'ENG111', 2),
+    ('950829-1848', 'CHE350', 3),
+    ('950829-1848', 'BIO001', 2.5),
+    ('123456-0980', 'CS052', 3.5),
+    ('123456-0980', 'CS056', 4),
+    ('908023-2456', 'PHY210', 3.0),
+    ('908023-2456', 'CS056', 1.0),
+    ('908023-2456', 'CS010', 2.0),
+    ('124345-3430', 'FIN052', 2.5),
+    ('124345-3430', 'CHE350', 4),
+    ('908409-0010', 'CS052', 2),
+    ('124587-9088', 'BIO001', 4),
+    ('124587-9088', 'CS052', 3.5);
 
-/*Number 3*/
+--Number 3
 select firstName, lastName from Students order by lastName asc, firstName asc;
 
-/*Number 4*/
+--Number 4
 select studentID, firstName, lastName from Students where dateofbirth>'1993-12-31' and gender='F';
 
-/*Number 5*/
+--Number 5
 select count(courseCode) from Registration where courseCode='CS056';
 
-/*Number 6*/
+--Number 6
 select courseCode from Courses where courseCode like'CS%';
 
-/*Number 7*/
+--Number 7
 select courseCode, courseName from Courses where credits<5;
 
-/*Number 8*/
-#select count(level) from Courses where level='G1';
-#select count(level) from Courses where level='U1';
-#select count(level) from Courses where level='U2';
-#select count(level) from Courses where level='U3';
-/*Correction for number 8*/
+--Number 8
 select level, count(level) from Courses group by level;
 
-/*Number 9*/
+--Number 9
 select courseCode from Registration where studentID='861103-2438';
 
-/*Number 10*/
+--Number 10
 select studentID from Registration where grade in (select max(grade) from Registration where courseCode='CS052') and courseCode='CS052';
 
-/*Number 11*/
-select courseCode from Registration as student1 
-where exists(
-select * from Registration as student2 where 
-student1.courseCode = student2.courseCode 
-and student1.studentID = '861103-2438' 
-and student2.studentID = '123456-0980' 
-and student1.studentID != student2.studentID
-);
-
+--Number 11
 select courseCode from Registration
 where studentID = '861103-2438'
 and courseCode in
 (select courseCode from Registration
 where studentID = '123456-0980');
 
-/*Number 12*/
+--Number 12
 select studentID from Students where studentID not in (select studentID from Registration);
 
-/*Number 13*/
+--Number 13
 select studentID, sum(grade), avg(grade) from Registration group by studentID having avg(grade)>3;
 
-/*Number 14*/
+--Number 14
 select studentID from Registration group by studentID order by count(studentID) desc limit 1;
 
-/*Number 15*/
+--Number 15
 select studentID from Registration where courseCode='PHY210' or courseCode='BIO001';
 
-/*Number 16*/
+--Number 16
 select firstName, lastName from Students order by dateofbirth desc limit 1;
 
-/*Number 17*/
+--Number 17
 update Courses set credits=6 where courseCode like 'CS%' and credit=5;
 
-/*Number 18*/
+--Number 18
 delete from Registration where studentID='908409-0010';
-#delete from Students where studentID='908409-0010';
 
-/*Number 19*/
+--Number 19
 update Registration	set grade=3.8 where courseCode='PHY210' and studentID='861103-2438';
 
 select * from Registration;
